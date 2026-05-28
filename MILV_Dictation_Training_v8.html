@@ -1,0 +1,1493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MILV Dictation Standards | Asynchronous Training</title>
+<style>
+:root {
+  --milv-blue:#005B8E;
+  --milv-blue-dark:#003F63;
+  --milv-blue-soft:#E8F2F8;
+  --milv-gray-900:#1F2933;
+  --milv-gray-700:#3E4C59;
+  --milv-gray-600:#52606D;
+  --milv-gray-400:#CBD2D9;
+  --milv-gray-200:#E4E7EB;
+  --milv-gray-100:#F5F7FA;
+  --white:#FFFFFF;
+  --pass:#005B8E;
+  --fail:#6B7280;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--milv-gray-100);color:var(--milv-gray-900);line-height:1.45}
+a{color:var(--milv-blue-dark);font-weight:700}
+header{background:linear-gradient(135deg,var(--milv-blue-dark),var(--milv-blue));color:var(--white);padding:28px 22px;border-bottom:6px solid var(--milv-gray-400)}
+.header-inner, main{max-width:1180px;margin:0 auto}
+.brand{display:flex;gap:16px;align-items:center}
+.logo{width:62px;height:62px;border-radius:50%;background:var(--white);color:var(--milv-blue);display:flex;align-items:center;justify-content:center;font-weight:900;letter-spacing:.4px;border:3px solid #D7E6EF;box-shadow:0 4px 18px rgba(0,0,0,.16)}
+h1{font-size:30px;margin:0 0 6px;line-height:1.15}
+header p{margin:0;color:#EEF7FC;max-width:920px}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.97);border-bottom:1px solid var(--milv-gray-200);box-shadow:0 2px 10px rgba(0,63,99,.07)}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.badge{display:inline-flex;gap:6px;align-items:center;border-radius:999px;background:var(--milv-blue-soft);color:var(--milv-blue-dark);font-weight:800;font-size:12px;padding:7px 10px;border:1px solid #C5DAE8}
+button,.btn{border:0;border-radius:10px;background:var(--milv-blue);color:white;font-weight:800;padding:10px 13px;cursor:pointer;text-decoration:none;display:inline-block;font:inherit}
+button:hover,.btn:hover{background:var(--milv-blue-dark)}
+button.secondary,.btn.secondary{background:var(--white);color:var(--milv-blue-dark);border:1px solid var(--milv-gray-400)}
+button.secondary:hover,.btn.secondary:hover{background:var(--milv-blue-soft)}
+button.ghost{background:transparent;color:var(--milv-blue-dark);border:1px solid transparent}
+button.ghost:hover{border-color:var(--milv-gray-400);background:var(--white)}
+button.admin-small{font-size:12px;padding:6px 9px;border-radius:999px;background:var(--white);color:var(--milv-blue-dark);border:1px solid var(--milv-gray-400)}
+button.admin-small:hover{background:var(--milv-blue-soft)}
+button.owner-setup-btn{width:26px;height:26px;padding:0;border-radius:999px;font-size:0;opacity:.42;flex:0 0 auto;min-width:26px}
+button.owner-setup-btn::before{content:'⚙';font-size:13px;line-height:1}
+button.owner-setup-btn:hover{opacity:1;background:var(--milv-blue-soft)}
+.topbar-actions button.owner-setup-btn{flex:0 0 auto;margin-left:2px}
+.topbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mailto-btn{background:var(--milv-blue-dark)}
+button:disabled{opacity:.5;cursor:not-allowed}
+main{padding:22px}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+nav{position:sticky;top:70px;background:white;border:1px solid var(--milv-gray-200);border-radius:18px;padding:12px;box-shadow:0 4px 18px rgba(0,63,99,.08)}
+nav h3{color:var(--milv-blue-dark);margin:6px 8px 10px}
+.navbtn{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:white;color:var(--milv-gray-900);border:1px solid var(--milv-gray-200);padding:10px;border-radius:12px;margin:6px 0}
+.navbtn:hover{background:var(--milv-blue-soft)}
+.navbtn.active{background:var(--milv-blue-soft);border-color:#9EC4D9}
+.navbtn.done:after{content:'✓';margin-left:auto;color:var(--milv-blue-dark);font-weight:900}
+.icon{width:34px;height:34px;border-radius:10px;background:var(--milv-gray-100);color:var(--milv-blue-dark);display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;flex:0 0 auto;border:1px solid var(--milv-gray-200)}
+.card{background:white;border:1px solid var(--milv-gray-200);border-radius:18px;padding:18px;box-shadow:0 4px 18px rgba(0,63,99,.07);margin-bottom:16px}#app{scroll-margin-top:84px}
+.card h2,.card h3{color:var(--milv-blue-dark);margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.lesson{border-left:5px solid var(--milv-blue);background:#FCFEFF;border-radius:12px;padding:12px 14px;margin:10px 0}
+.lesson h4{margin:0 0 4px;color:var(--milv-blue-dark)}
+.lesson p{margin:0;color:var(--milv-gray-700)}
+.callout{border:1px solid #BED6E6;background:var(--milv-blue-soft);border-radius:14px;padding:14px;margin:12px 0}
+.callout.gray{background:var(--milv-gray-100);border-color:var(--milv-gray-200)}
+.callout.white{background:white;border-color:var(--milv-gray-200)}
+label{display:block;font-weight:800;color:var(--milv-blue-dark);margin:10px 0 4px}
+input,select,textarea{width:100%;border:1px solid var(--milv-gray-400);border-radius:10px;padding:10px;font:inherit;background:white;color:var(--milv-gray-900)}
+textarea{min-height:90px}
+.small{font-size:12px;color:var(--milv-gray-600)}
+.module-tile{border:1px solid var(--milv-gray-200);border-radius:14px;background:var(--white);padding:13px;display:flex;gap:10px;align-items:flex-start}
+.module-tile h4{margin:0 0 4px;color:var(--milv-blue-dark)}
+.module-tile p{margin:0;color:var(--milv-gray-600);font-size:13px}
+.module-select{display:flex;gap:10px;align-items:flex-start;background:#FCFEFF;border:1px solid var(--milv-gray-200);border-radius:12px;padding:10px;margin:7px 0}
+.module-select input{width:auto;margin-top:4px}
+.module-select span{font-weight:800;color:var(--milv-blue-dark)}
+.quiz-option{display:block;border:1px solid var(--milv-gray-200);border-radius:12px;padding:10px;margin:8px 0;background:white;font-weight:500;color:var(--milv-gray-900)}
+.quiz-option input{width:auto;margin-right:8px}
+.quiz-option.correct{border-color:var(--milv-blue);background:var(--milv-blue-soft)}
+.quiz-option.incorrect{border-color:var(--milv-gray-400);background:var(--milv-gray-100)}
+.result{font-weight:800;margin:10px 0;padding:10px;border-radius:12px}
+.pass{background:var(--milv-blue-soft);color:var(--milv-blue-dark);border:1px solid #B9D4E4}
+.fail{background:var(--milv-gray-100);color:var(--milv-gray-700);border:1px solid var(--milv-gray-400)}
+.progress-wrap{background:var(--milv-gray-200);height:12px;border-radius:999px;overflow:hidden}
+.progress-bar{background:var(--milv-blue);height:100%;width:0%;transition:width .2s}
+.table{width:100%;border-collapse:collapse;font-size:14px}
+.table th,.table td{border-bottom:1px solid var(--milv-gray-200);padding:9px;text-align:left;vertical-align:top}
+.table th{background:var(--milv-gray-100);color:var(--milv-blue-dark)}
+.hidden{display:none!important}
+hr{border:0;border-top:1px solid var(--milv-gray-200);margin:18px 0}
+.footer-note{font-size:12px;color:var(--milv-gray-600);margin-top:20px}
+.kicker{text-transform:uppercase;letter-spacing:.08em;color:var(--milv-gray-600);font-size:12px;font-weight:900}
+.certificate-preview{border:3px solid var(--milv-blue);background:white;padding:28px;border-radius:12px;text-align:center}
+.certificate-preview h2{font-size:30px;margin:8px 0;color:var(--milv-blue-dark)}
+@media(max-width:900px){.layout{grid-template-columns:1fr} nav{position:relative;top:auto} .topbar-inner{align-items:flex-start}}
+@media print{header,.topbar,nav,.no-print,button{display:none!important} body{background:white} main{padding:0} .layout{display:block} .card{box-shadow:none;border:1px solid #ccc}}
+
+
+@media(max-width:1180px){
+  .header-inner, main, .topbar-inner{max-width:100%;}
+  .layout{grid-template-columns:1fr;}
+  nav{position:relative;top:auto;}
+  nav h3{margin-top:0;}
+  .topbar-inner{align-items:flex-start;}
+  .topbar-actions{width:100%;}
+  .topbar-actions button{flex:1 1 auto;}
+}
+@media(max-width:650px){
+  header{padding:20px 14px;}
+  main{padding:12px;}
+  .brand{align-items:flex-start;}
+  .logo{width:48px;height:48px;font-size:13px;}
+  h1{font-size:23px;}
+  .card{padding:14px;border-radius:14px;}
+  .navbtn{padding:9px;}
+  .topbar-actions button{width:100%;}
+  .topbar-actions button.owner-setup-btn{width:26px;min-width:26px;flex:0 0 auto;}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner brand">
+    <div class="logo">MILV</div>
+    <div>
+      <h1>Dictation Standards Training</h1>
+      <p>Modality-specific onboarding for new physicians. Training owners select the applicable modality modules and provide an learner key; Universal Dictation Standards and Pennsylvania Act 112 are included for every learner. Learners complete training, pass quizzes, attest, then open the competency certificate and use the browser print window to save it as a PDF for email submission.</p>
+    </div>
+  </div>
+</header>
+<div class="topbar no-print">
+  <div class="topbar-inner">
+    <div>
+      <span class="badge" id="assignmentBadge">Assignment loading...</span>
+      <span class="badge" id="completionBadge">0% complete</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="ghost" data-view="home">Learner instructions</button>
+      <button class="ghost" data-view="results">Results / certificate</button>
+      <button class="admin-small owner-setup-btn" data-view="setup" title="Training owner setup" aria-label="Training owner setup">Owner setup</button>
+    </div>
+  </div>
+</div>
+<main>
+  <div class="layout">
+    <nav class="no-print">
+      <h3>Training Menu</h3>
+      <button class="navbtn" id="nav-home" data-view="home"><span class="icon">?</span><span>Learner instructions</span></button>
+      <div id="moduleNav"></div>
+      <button class="navbtn" id="nav-final" data-view="final"><span class="icon">F</span><span>Final competency</span></button>
+      <button class="navbtn" id="nav-results" data-view="results"><span class="icon">R</span><span>Results / certificate</span></button>
+      <hr>
+      <div class="small">Need assistance? Contact <a href="mailto:LVHN_MILV_Coding_Team@jefferson.edu">MILV Coding Team</a>.</div>
+    </nav>
+    <section id="app"></section>
+  </div>
+</main>
+<script>
+const CONTACT_EMAIL = "LVHN_MILV_Coding_Team@jefferson.edu";
+const MODULE_PASS = 80;
+const FINAL_PASS = 80;
+const MODULES = [
+  {
+    "id": "universal",
+    "title": "Universal Dictation Standards",
+    "short": "Universal",
+    "icon": "U",
+    "audience": "All new physicians",
+    "lessons": [
+      {
+        "title": "Report structure",
+        "body": "Use separate paragraphs for each exam/CPT code. Only combine exams of contiguous body parts when a single report is appropriate."
+      },
+      {
+        "title": "Core required content",
+        "body": "Clearly state the exam performed, the indication, relevant clinical history or symptoms, laterality when applicable, and any relevant information supplied by the patient or technologist."
+      },
+      {
+        "title": "Specificity supports coding",
+        "body": "The impression should include laterality and the specificity needed to support ICD-10 coding when applicable."
+      },
+      {
+        "title": "Comparison section",
+        "body": "Include comparison exams used. If no comparison exam was used, keep the Comparison section and explicitly state None."
+      },
+      {
+        "title": "Structured reports",
+        "body": "Use the structured report when one has been developed for the exam type."
+      }
+    ],
+    "practice": {
+      "scenario": "A report uses a structured template, but the Comparison section was removed because there was no comparison exam.",
+      "model": "Keep the Comparison section and document: Comparison: None. Do not remove the section from the structured report."
+    },
+    "quiz": [
+      {
+        "q": "When multiple exams/CPT codes are included, what should the report generally do?",
+        "options": [
+          "Use one combined paragraph for all exams",
+          "Use separate paragraphs for each exam/CPT code",
+          "Only document the impression",
+          "Remove technique details"
+        ],
+        "answer": 1,
+        "explanation": "The universal standard calls for separate paragraphs for each exam/CPT code."
+      },
+      {
+        "q": "If no prior exam is used for comparison, what is the best documentation?",
+        "options": [
+          "Delete the Comparison section",
+          "Leave it blank",
+          "State Comparison: None",
+          "Mention comparison only in the impression"
+        ],
+        "answer": 2,
+        "explanation": "The Comparison section should remain and explicitly state None."
+      },
+      {
+        "q": "Which item belongs in the indication/history portion when available?",
+        "options": [
+          "Only the order title",
+          "Clinical signs/symptoms including laterality",
+          "The radiologist schedule location",
+          "The billing office name"
+        ],
+        "answer": 1,
+        "explanation": "Clinical history, signs, symptoms, and laterality should be captured when applicable."
+      },
+      {
+        "q": "Why should the impression include laterality when applicable?",
+        "options": [
+          "It supports specificity needed for ICD-10 coding",
+          "It replaces the exam title",
+          "It eliminates the need for findings",
+          "It is only required for mammography"
+        ],
+        "answer": 0,
+        "explanation": "Laterality and other specificity help support appropriate diagnosis coding."
+      },
+      {
+        "q": "What should be done when a structured report exists for the exam?",
+        "options": [
+          "Use it when developed",
+          "Avoid it for all new physicians",
+          "Delete fixed sections",
+          "Use free text only"
+        ],
+        "answer": 0,
+        "explanation": "The standard says to use the structured report if developed."
+      }
+    ]
+  },
+  {
+    "id": "xray",
+    "title": "Diagnostic X-ray / Plain Films",
+    "short": "X-ray",
+    "icon": "XR",
+    "audience": "Plain film, MSK, general diagnostic readers",
+    "lessons": [
+      {
+        "title": "Views versus images",
+        "body": "Distinguish number of views from number of images. One view may have multiple images, such as high/low KUB images."
+      },
+      {
+        "title": "Anatomy and view descriptions",
+        "body": "Document the actual anatomy and views. Generic phrases such as obstruction series, rib series, or babygram are not enough by themselves."
+      },
+      {
+        "title": "Chest, abdomen, ribs",
+        "body": "Chest studies should specify view type when labeled, such as PA, lateral, expiration, apical lordotic, decubitus, obliques, or nipple markers. Rib studies should specify rib views and include the PA chest when performed."
+      },
+      {
+        "title": "Spine and special views",
+        "body": "The swimmer view is a separate view. Cervical spine open-mouth odontoid and Fuchs views are separate views."
+      },
+      {
+        "title": "Pediatric and operative details",
+        "body": "Infant extremity codes apply up to 365 days. Babygram imaging should be documented as AP chest and AP abdomen with separate dictation/findings. Post-ORIF reports should include alignment assessment."
+      }
+    ],
+    "practice": {
+      "scenario": "A rib report says only: Right rib series performed. No view count or chest view is documented.",
+      "model": "Document the number of rib views and whether a PA chest view was performed, for example: Three right rib views including AP, oblique, and lower AP, with one PA chest view."
+    },
+    "quiz": [
+      {
+        "q": "What is the key distinction for x-ray documentation?",
+        "options": [
+          "Views and images always mean the same thing",
+          "Views must be distinguished from images",
+          "Image count replaces anatomy documentation",
+          "Only the order name is needed"
+        ],
+        "answer": 1,
+        "explanation": "The standard emphasizes that the number of views is not necessarily the number of images."
+      },
+      {
+        "q": "Which documentation is more complete for an obstruction series?",
+        "options": [
+          "Obstruction series",
+          "Abdomen/chest series",
+          "Supine and erect abdomen with one PA chest view",
+          "Several images obtained"
+        ],
+        "answer": 2,
+        "explanation": "The report should identify the abdomen views and chest view rather than only stating obstruction series."
+      },
+      {
+        "q": "For thoracic spine documentation, how is the swimmer view treated?",
+        "options": [
+          "As part of the lateral view",
+          "As a separate view",
+          "As an image but not a view",
+          "Only if abnormal"
+        ],
+        "answer": 1,
+        "explanation": "The swimmer view is considered a separate view."
+      },
+      {
+        "q": "What is inadequate by itself for rib imaging?",
+        "options": [
+          "Three rib views and one PA chest view",
+          "Right rib series only",
+          "AP and oblique rib views",
+          "PA chest view if performed"
+        ],
+        "answer": 1,
+        "explanation": "The phrase rib series alone does not support the actual views performed."
+      },
+      {
+        "q": "For post-ORIF imaging, what should be included?",
+        "options": [
+          "Assessment of anatomical alignment",
+          "Only the hardware brand",
+          "No findings unless abnormal",
+          "A fluoroscopy dose only"
+        ],
+        "answer": 0,
+        "explanation": "Post-ORIF imaging should include assessment of anatomical alignment."
+      }
+    ]
+  },
+  {
+    "id": "fluoro",
+    "title": "Fluoroscopy, OR Imaging, and Cine Imaging",
+    "short": "Fluoro/OR",
+    "icon": "FL",
+    "audience": "Fluoroscopy, OR, general diagnostic readers",
+    "lessons": [
+      {
+        "title": "Fluoroscopy dose",
+        "body": "Reports using fluoroscopy should include fluoroscopy dose, units, and index such as CAK or DAP when documented."
+      },
+      {
+        "title": "PA-performed non-invasive fluoro",
+        "body": "When a PA-C performs non-invasive fluoroscopic imaging, use language such as: Imaging performed by [name], PA-C with radiologist interpretation."
+      },
+      {
+        "title": "Swallow studies",
+        "body": "Speech or swallowing studies should specify that video or cine imaging was performed."
+      },
+      {
+        "title": "Test design changes",
+        "body": "When the test design changes to get a better result, document the reason or medical necessity for the change."
+      },
+      {
+        "title": "OR and cine imaging",
+        "body": "For delayed closure foreign body evaluation, describe the exam as cine loop or cineradiography of the abdomen and document findings. For intraoperative imaging not ordered as plain film, make clear the procedure was not performed by the radiologist and identify the performing provider when known."
+      }
+    ],
+    "practice": {
+      "scenario": "An esophagram was performed by a PA-C and interpreted by the radiologist. The draft report does not identify that the PA-C performed the imaging.",
+      "model": "Add: Imaging performed by [name], PA-C with radiologist interpretation. Include required fluoroscopy dose/index details when available."
+    },
+    "quiz": [
+      {
+        "q": "Which fluoroscopy elements should be documented when fluoroscopy is used?",
+        "options": [
+          "Dose, units, and index such as CAK or DAP",
+          "Only the number of images",
+          "Only contrast amount",
+          "Only room number"
+        ],
+        "answer": 0,
+        "explanation": "Fluoroscopy dose, units, and index should be dictated in reports utilizing fluoroscopy."
+      },
+      {
+        "q": "For PA-C performed non-invasive fluoroscopy, which phrase best supports the workflow?",
+        "options": [
+          "Exam performed by radiology",
+          "Imaging performed by ___, PA-C with radiologist interpretation",
+          "PA present",
+          "Radiologist not involved"
+        ],
+        "answer": 1,
+        "explanation": "The standard provides this phrasing for PA-C performed imaging with radiologist interpretation."
+      },
+      {
+        "q": "For speech/swallowing studies, the report should specify that what was performed?",
+        "options": [
+          "Video/cine imaging",
+          "MIP rendering",
+          "DynaCAD modeling",
+          "A screening mammogram"
+        ],
+        "answer": 0,
+        "explanation": "Speech/swallowing studies should specify video or cine imaging."
+      },
+      {
+        "q": "If single contrast is ordered but air is added to improve imaging, what should the report include?",
+        "options": [
+          "No explanation",
+          "Reason/medical necessity for the change",
+          "A billing note only",
+          "Delete the indication"
+        ],
+        "answer": 1,
+        "explanation": "Test design changes should include documentation of the reason or medical necessity."
+      },
+      {
+        "q": "Delayed closure foreign body evaluation using abdominal cine should be described as what?",
+        "options": [
+          "Routine abdomen x-ray only",
+          "Cine loop or cineradiography of the abdomen",
+          "CTA abdomen",
+          "MRI CAD"
+        ],
+        "answer": 1,
+        "explanation": "The document specifies cine loop/cineradiography language for delayed closure evaluation."
+      }
+    ]
+  },
+  {
+    "id": "breast",
+    "title": "Mammography and Breast Ultrasound",
+    "short": "Breast",
+    "icon": "BR",
+    "audience": "Breast imaging readers",
+    "lessons": [
+      {
+        "title": "Structured breast reporting",
+        "body": "Use standard structured reporting for breast imaging workflows."
+      },
+      {
+        "title": "Screening mammography assessment",
+        "body": "Screening mammograms should not be assigned BI-RADS 3. Screening mammograms or screening ultrasound should generally use BI-RADS 0, 1, or 2 based on findings."
+      },
+      {
+        "title": "Diagnostic mammogram and ultrasound linkage",
+        "body": "Diagnostic mammograms should be linked with same-day diagnostic ultrasounds by the radiologist so one BI-RADS assessment displays accordingly."
+      },
+      {
+        "title": "Complete breast ultrasound",
+        "body": "Complete breast ultrasound must document all four quadrants and the retroareolar region. This should be included in the template."
+      },
+      {
+        "title": "Remote/location workflows",
+        "body": "Follow current MILV and site-specific breast workflow instructions for remote reading and platform transitions."
+      }
+    ],
+    "practice": {
+      "scenario": "A complete bilateral breast ultrasound report documents upper outer quadrants only and omits retroareolar regions.",
+      "model": "Revise the technique/body to document all four quadrants and retroareolar regions of both breasts when a complete breast ultrasound is performed."
+    },
+    "quiz": [
+      {
+        "q": "Which BI-RADS assessment is inappropriate for a screening mammogram under this training standard?",
+        "options": [
+          "BI-RADS 0",
+          "BI-RADS 1",
+          "BI-RADS 2",
+          "BI-RADS 3"
+        ],
+        "answer": 3,
+        "explanation": "The onboarding material says BI-RADS 3 should not be assigned for screening mammograms or ultrasound."
+      },
+      {
+        "q": "Complete breast ultrasound documentation should include what?",
+        "options": [
+          "Only the area of pain",
+          "All four quadrants and retroareolar region",
+          "Only axillary nodes",
+          "Only the largest lesion"
+        ],
+        "answer": 1,
+        "explanation": "Complete breast ultrasound requires all four quadrants and the retroareolar region."
+      },
+      {
+        "q": "Same-day diagnostic mammogram and diagnostic ultrasound should be handled how?",
+        "options": [
+          "Never linked",
+          "Linked by the radiologist so one BI-RADS displays accordingly",
+          "Reported as screening only",
+          "Assigned no BI-RADS"
+        ],
+        "answer": 1,
+        "explanation": "The source material says diagnostic mammograms should be linked with same-day diagnostic ultrasounds by the radiologist."
+      },
+      {
+        "q": "Which type of reporting is expected for mammography?",
+        "options": [
+          "Standard structured reporting",
+          "Free text only",
+          "No impression",
+          "Only voice note"
+        ],
+        "answer": 0,
+        "explanation": "Standard structured reporting is used for mammography."
+      },
+      {
+        "q": "For a complete ultrasound of both breasts, which sample phrase is strongest?",
+        "options": [
+          "Ultrasound performed",
+          "Targeted images obtained",
+          "Real-time complete ultrasound of all four quadrants and retroareolar regions of both breasts was performed",
+          "Limited screening complete"
+        ],
+        "answer": 2,
+        "explanation": "The sample phrase documents complete examination of all required breast regions."
+      }
+    ]
+  },
+  {
+    "id": "usduplex",
+    "title": "Ultrasound and Duplex",
+    "short": "US/Duplex",
+    "icon": "US",
+    "audience": "Ultrasound, vascular, general diagnostic readers",
+    "lessons": [
+      {
+        "title": "Renal versus retroperitoneal",
+        "body": "US kidneys/renal is a limited retroperitoneal charge and should be described as kidneys/renal or limited retroperitoneum, not complete because survey bladder images are included. US retroperitoneum kidney/bladder is complete when ordered for kidney and bladder with urinary tract pathology."
+      },
+      {
+        "title": "Complete abdominal ultrasound",
+        "body": "A complete abdominal ultrasound includes liver, gallbladder, common bile duct, pancreas, spleen, kidneys, upper abdominal aorta, and IVC, including any demonstrated abnormality."
+      },
+      {
+        "title": "Nonvisualized structures",
+        "body": "If a required organ cannot be visualized, document that fact and the reason, such as surgically absent, bowel gas, patient habitus, or obscuration."
+      },
+      {
+        "title": "Duplex support",
+        "body": "Duplex documentation must support B-mode/two-dimensional vascular structure, color flow Doppler, and spectral Doppler analysis. Saying only duplex is not sufficient."
+      },
+      {
+        "title": "Vascular completeness",
+        "body": "Complete visceral studies should document arterial inflow and venous outflow. Aorta or IVC duplex should evaluate distal, mid, and proximal segments to support a complete study."
+      }
+    ],
+    "practice": {
+      "scenario": "A duplex report says: Duplex performed. No color flow or spectral Doppler language appears in the technique or findings.",
+      "model": "Add technique language such as: Gray scale and color flow imaging with spectral Doppler analysis performed. Then include the blood flow evaluation in the body of the report."
+    },
+    "quiz": [
+      {
+        "q": "A renal/kidney ultrasound with survey bladder images should generally be described as what?",
+        "options": [
+          "Complete retroperitoneal ultrasound solely because bladder images exist",
+          "Kidneys/renal ultrasound or limited retroperitoneum",
+          "Complete abdominal ultrasound",
+          "Pelvic Doppler"
+        ],
+        "answer": 1,
+        "explanation": "The source material says renal/kidney ultrasound is a limited charge and should not be described as complete because of survey bladder images."
+      },
+      {
+        "q": "Which structures belong in a complete abdominal ultrasound?",
+        "options": [
+          "Only liver and gallbladder",
+          "Liver, gallbladder, CBD, pancreas, spleen, kidneys, upper aorta, and IVC",
+          "Only kidneys and bladder",
+          "Only the abnormal organ"
+        ],
+        "answer": 1,
+        "explanation": "Those structures are listed for a complete abdominal ultrasound."
+      },
+      {
+        "q": "If the pancreas cannot be visualized on complete abdomen ultrasound, what should be documented?",
+        "options": [
+          "Nothing",
+          "That it cannot be visualized and why",
+          "Only a normal impression",
+          "Delete the exam"
+        ],
+        "answer": 1,
+        "explanation": "If unable to visualize a required organ, document that and the reason."
+      },
+      {
+        "q": "Which phrase best supports duplex documentation?",
+        "options": [
+          "Duplex was performed",
+          "Images obtained",
+          "Gray scale and color flow imaging with spectral Doppler analysis performed",
+          "Ultrasound complete"
+        ],
+        "answer": 2,
+        "explanation": "Duplex support requires color flow and spectral Doppler analysis, not the word duplex alone."
+      },
+      {
+        "q": "For complete visceral duplex studies, what flow documentation is needed?",
+        "options": [
+          "Arterial inflow and venous outflow",
+          "Only the organ size",
+          "Only a single grayscale image",
+          "Only patient symptoms"
+        ],
+        "answer": 0,
+        "explanation": "Complete visceral studies require arterial inflow and venous outflow documentation."
+      }
+    ]
+  },
+  {
+    "id": "ctmri",
+    "title": "CT, MRI, Reconstructions, CTA, and CAD",
+    "short": "CT/MRI",
+    "icon": "CT",
+    "audience": "CT/MRI, CTA, advanced imaging readers",
+    "lessons": [
+      {
+        "title": "Contrast documentation",
+        "body": "Include contrast type and amount. Be clear whether the exam was unenhanced only, contrast only, or non-contrast followed by contrast."
+      },
+      {
+        "title": "Route of contrast",
+        "body": "Document the route of contrast administration when applicable, such as intravascular, intrathecal, or intra-articular."
+      },
+      {
+        "title": "Spine reconstructions",
+        "body": "When CT spine imaging is reconstructed from chest/abdomen/pelvis data, clearly identify that it was reconstructed from the body CT and state whether the original scan was enhanced or unenhanced."
+      },
+      {
+        "title": "CTA 3D rendering language",
+        "body": "CTA templates or dictated technique should include searchable language: 3D rendering: MIP and/or volumetric reformations."
+      },
+      {
+        "title": "MRI DynaCAD",
+        "body": "MRI studies using DynaCAD postprocessing should be documented as CAD postprocessing rather than 3D postprocessing, with medical necessity/supportive language."
+      }
+    ],
+    "practice": {
+      "scenario": "A CTA report describes axial source images and MIPs but does not contain the standardized 3D rendering language.",
+      "model": "Add the standardized technique phrase: 3D rendering: MIP and/or volumetric reformations."
+    },
+    "quiz": [
+      {
+        "q": "CT/MRI contrast documentation should include what?",
+        "options": [
+          "Only that contrast was used",
+          "Contrast type and amount, plus clear enhancement sequence",
+          "Only the IV site",
+          "Only scanner type"
+        ],
+        "answer": 1,
+        "explanation": "The source material calls for contrast type/amount and clarity about unenhanced, contrast-only, or non-contrast followed by contrast."
+      },
+      {
+        "q": "Which route of contrast administration should be documented when applicable?",
+        "options": [
+          "Intravascular, intrathecal, or intra-articular",
+          "Only oral",
+          "Only topical",
+          "No route is needed"
+        ],
+        "answer": 0,
+        "explanation": "The route should be dictated, including intravascular, intrathecal, or intra-articular as applicable."
+      },
+      {
+        "q": "For CT spine reconstructed from chest/abdomen/pelvis, what must be clear?",
+        "options": [
+          "That it was reconstructed from body CT and whether the original scan was enhanced or unenhanced",
+          "Only that spine was reviewed",
+          "Only sagittal images exist",
+          "Nothing because it is no charge"
+        ],
+        "answer": 0,
+        "explanation": "The report should identify reconstruction from the body CT and the enhancement status of the original scan."
+      },
+      {
+        "q": "Which phrase supports CTA 3D rendering documentation?",
+        "options": [
+          "3D rendering: MIP and/or volumetric reformations",
+          "Images reviewed",
+          "CTA performed",
+          "Contrast administered"
+        ],
+        "answer": 0,
+        "explanation": "The onboarding material identifies this as the standardized searchable phrase."
+      },
+      {
+        "q": "DynaCAD postprocessing for MRI prostate should be described as what?",
+        "options": [
+          "CAD postprocessing",
+          "Routine x-ray views",
+          "Cineradiography",
+          "Mammography linkage"
+        ],
+        "answer": 0,
+        "explanation": "The source document says this is considered CAD rather than 3D postprocessing."
+      }
+    ]
+  },
+  {
+    "id": "ob",
+    "title": "Obstetric Ultrasound",
+    "short": "OB US",
+    "icon": "OB",
+    "audience": "OB ultrasound readers where MILV coverage applies",
+    "lessons": [
+      {
+        "title": "Exam type clarity",
+        "body": "Clearly specify the OB exams completed, such as transvaginal OB, transabdominal OB less than 14 weeks, transabdominal OB 14 weeks or greater, and Doppler when performed."
+      },
+      {
+        "title": "Complete OB less than 14 weeks",
+        "body": "Required elements include number of gestational sacs/fetuses, gestational sac measurement or average crown-rump length with estimated gestational age, gestational sac shape or amniotic fluid assessment when applicable, placental structure survey when assessable, and maternal uterus/adnexa."
+      },
+      {
+        "title": "When elements cannot be assessed",
+        "body": "If a required element cannot be assessed, document the reason, such as placenta cannot be assessed based on gestational age or amniotic fluid cannot be assessed based on gestational age."
+      },
+      {
+        "title": "Complete OB 14 weeks or greater",
+        "body": "Required elements include number of fetuses and sacs, BPD/AC/HC/FL with estimated gestational age, anatomy survey, four-chamber heart, cord insertion site, placenta location, amniotic fluid assessment, and maternal uterus/adnexa."
+      },
+      {
+        "title": "Follow current site coverage",
+        "body": "Follow current MILV site-specific OB coverage rules, especially for emergency versus outpatient coverage and exams routed to maternal fetal medicine."
+      }
+    ],
+    "practice": {
+      "scenario": "A 7-week complete OB ultrasound report includes CRL and fetal heart rate but omits amniotic fluid assessment and placental assessment/reason.",
+      "model": "Add amniotic fluid volume statement if assessable, or document why it cannot be assessed. Add placental structure statement if assessable, or state placenta cannot be assessed based on gestational age."
+    },
+    "quiz": [
+      {
+        "q": "For complete OB under 14 weeks, what should be included with gestational sac/CRL measurement?",
+        "options": [
+          "Estimated gestational age",
+          "Only the scanner setting",
+          "Only billing code",
+          "No measurements"
+        ],
+        "answer": 0,
+        "explanation": "Estimated gestational age should be included with gestational sac/CRL assessment."
+      },
+      {
+        "q": "If placenta cannot be assessed early in gestation, what should the report do?",
+        "options": [
+          "Omit it silently",
+          "Document the reason it cannot be assessed",
+          "Mark it normal",
+          "Delete the OB exam"
+        ],
+        "answer": 1,
+        "explanation": "A reason must be dictated if a required element cannot be assessed."
+      },
+      {
+        "q": "Complete OB 14 weeks or greater requires which measurements?",
+        "options": [
+          "BPD, AC, HC, and FL",
+          "Only crown-rump length",
+          "Only bladder volume",
+          "Only aorta diameter"
+        ],
+        "answer": 0,
+        "explanation": "BPD, abdominal circumference, head circumference, and femur length are listed as required measurements."
+      },
+      {
+        "q": "For OB exams, the report should clearly specify what?",
+        "options": [
+          "The exams completed such as transabdominal, transvaginal, and Doppler when performed",
+          "Only patient age",
+          "Only fetal sex",
+          "Only reading location"
+        ],
+        "answer": 0,
+        "explanation": "The source document emphasizes clearly specifying exams performed."
+      },
+      {
+        "q": "Complete OB 14 weeks or greater includes which anatomic survey elements?",
+        "options": [
+          "Intracranial/spinal/abdominal anatomy, four-chamber heart, and cord insertion site",
+          "Only kidneys",
+          "Only gallbladder",
+          "Only maternal cervix"
+        ],
+        "answer": 0,
+        "explanation": "Those survey elements are listed for a complete OB 14 weeks or greater exam."
+      }
+    ]
+  },
+  {
+    "id": "act112",
+    "title": "Pennsylvania Act 112 Workflow",
+    "short": "PA Act 112",
+    "icon": "112",
+    "audience": "Readers of applicable outpatient CT, MR, US, NM, and PET studies",
+    "lessons": [
+      {
+        "title": "Purpose",
+        "body": "PA Act 112 notification language is used to initiate the patient letter workflow for significant findings in applicable outpatient imaging."
+      },
+      {
+        "title": "Exact trigger phrase",
+        "body": "The exact wording Significant Findings: PA Act 112 must be used in documentation to initiate the letter workflow."
+      },
+      {
+        "title": "PowerScribe normal/macro",
+        "body": "Use the available PowerScribe system normal or macro for PA Act 112 when applicable so the required language is inserted consistently."
+      },
+      {
+        "title": "Provider communication",
+        "body": "The Act 112 language initiates the patient letter workflow. Continue to contact the provider when appropriate based on clinical circumstances."
+      },
+      {
+        "title": "Included exam types",
+        "body": "The onboarding source lists outpatient CT, MR, US, and NM, including PET, when significant findings are present."
+      }
+    ],
+    "practice": {
+      "scenario": "An outpatient CT report contains a significant finding that requires the patient letter workflow, but the report uses free-text language instead of the exact trigger phrase.",
+      "model": "Use the PowerScribe normal/macro or insert the exact phrase: Significant Findings: PA Act 112. Contact the provider when appropriate."
+    },
+    "quiz": [
+      {
+        "q": "What exact phrase initiates the PA Act 112 letter workflow?",
+        "options": [
+          "Critical results",
+          "Significant Findings: PA Act 112",
+          "Notify patient",
+          "Act finding"
+        ],
+        "answer": 1,
+        "explanation": "The onboarding deck identifies the exact phrase Significant Findings: PA Act 112."
+      },
+      {
+        "q": "Does PA Act 112 language replace provider contact when clinical circumstances require it?",
+        "options": [
+          "Yes, never contact the provider",
+          "No, still contact the provider where appropriate",
+          "Only for mammography",
+          "Only after 30 days"
+        ],
+        "answer": 1,
+        "explanation": "The deck says the language initiates the patient letter and the provider should still be contacted where appropriate."
+      },
+      {
+        "q": "Which exams are listed as included for PA Act 112 when outpatient and significant findings are present?",
+        "options": [
+          "Outpatient CT, MR, US, and NM including PET",
+          "Only inpatient x-rays",
+          "Only screening mammography",
+          "Only fluoroscopy"
+        ],
+        "answer": 0,
+        "explanation": "The onboarding deck lists outpatient CT, MR, US, and NM including PET."
+      },
+      {
+        "q": "What is the best way to insert the required PA Act 112 language consistently?",
+        "options": [
+          "Use the PowerScribe system normal/macro when applicable",
+          "Type similar wording each time",
+          "Avoid exact wording",
+          "Use the phrase only in the indication"
+        ],
+        "answer": 0,
+        "explanation": "The deck references a PowerScribe system normal/macro that inserts the appropriate language."
+      },
+      {
+        "q": "What is the purpose of the Act 112 phrase in the report?",
+        "options": [
+          "To initiate the patient letter workflow",
+          "To assign BI-RADS",
+          "To document duplex technique",
+          "To replace all report findings"
+        ],
+        "answer": 0,
+        "explanation": "The phrase is used to initiate the patient notification letter workflow."
+      }
+    ]
+  }
+];
+const REQUIRED_MODULES = ["universal", "act112"];
+const DEFAULT_MODULES = MODULES.map(m => m.id);
+const MODULE_CODE_BY_ID = { xray:"XR", fluoro:"FL", breast:"BR", usduplex:"US", ctmri:"CT", ob:"OB" };
+const MODULE_ID_BY_CODE = Object.fromEntries(Object.entries(MODULE_CODE_BY_ID).map(([id,code]) => [code,id]));
+const MODULE_BY_ID = Object.fromEntries(MODULES.map(m => [m.id, m]));
+let currentView = "home";
+let currentModuleId = null;
+let state = initState();
+
+function initState() {
+  const params = new URLSearchParams(window.location.search);
+  const decodedAssignment = decodeAssignmentCode(params.get("assign") || params.get("assignment") || "");
+  const paramModules = (params.get("modules") || "").split(",").map(x => x.trim()).filter(Boolean).filter(id => MODULE_BY_ID[id]);
+  const codeModules = decodedAssignment && Array.isArray(decodedAssignment.modules) ? decodedAssignment.modules.filter(id => MODULE_BY_ID[id]) : [];
+  let assigned = codeModules.length ? codeModules.slice() : (paramModules.length ? paramModules.slice() : DEFAULT_MODULES.slice());
+  REQUIRED_MODULES.forEach(id => { if (MODULE_BY_ID[id] && !assigned.includes(id)) assigned.push(id); });
+  assigned = orderedModuleIds(assigned);
+  const assignmentName = (decodedAssignment && decodedAssignment.path) || params.get("path") || (codeModules.length ? "Assigned modules" : (paramModules.length ? "Custom module assignment" : "All modules"));
+  const base = {
+    learnerName: (decodedAssignment && decodedAssignment.name) || params.get("name") || "",
+    learnerEmail: (decodedAssignment && decodedAssignment.email) || params.get("email") || "",
+    assignmentName,
+    assignedModules: assigned,
+    assignmentCode: (params.get("assign") || params.get("assignment") || "").trim(),
+    moduleProgress: {},
+    final: { answers: {}, score: null, passed: false, attempts: 0, attested: false, completedAt: null, verificationId: null }
+  };
+  assigned.forEach(id => { base.moduleProgress[id] = { reviewed: false, answers: {}, score: null, passed: false, attempts: 0 }; });
+  const saved = loadSaved(base);
+  return saved || base;
+}
+
+function orderedModuleIds(ids) {
+  const set = new Set(ids.filter(id => MODULE_BY_ID[id]));
+  return MODULES.map(m => m.id).filter(id => set.has(id));
+}
+function storageKey(s = state) {
+  const learner = (s.learnerEmail || s.learnerName || "anonymous").toLowerCase().replace(/[^a-z0-9]+/g,"_");
+  const mods = s.assignedModules.join("_");
+  return "milv_async_dictation_training_v8_" + learner + "_" + mods;
+}
+function loadSaved(base) {
+  try {
+    const raw = localStorage.getItem(storageKey(base));
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    if (Array.isArray(saved.assignedModules) && saved.assignedModules.join(",") === base.assignedModules.join(",")) return saved;
+  } catch(e) {}
+  return null;
+}
+function saveState() { try { localStorage.setItem(storageKey(), JSON.stringify(state)); } catch(e) {} }
+
+function captureCurrentDraftAnswers() {
+  if (currentView === "module" && currentModuleId && state.moduleProgress[currentModuleId] && state.moduleProgress[currentModuleId].score === null) {
+    saveModuleDraftAnswers(currentModuleId, false);
+  } else if (currentView === "final" && state.final.score === null) {
+    saveFinalDraftAnswers(false);
+  }
+}
+function saveModuleDraftAnswers(id, persist = true) {
+  const p = state.moduleProgress[id];
+  if (!p || p.score !== null) return;
+  const answers = {};
+  MODULE_BY_ID[id].quiz.forEach((q, qi) => {
+    const selected = document.querySelector(`input[name="q_${id}_${qi}"]:checked`);
+    if (selected) answers[qi] = Number(selected.value);
+  });
+  p.answers = answers;
+  if (persist) saveState();
+}
+function saveFinalDraftAnswers(persist = true) {
+  if (state.final.score !== null) return;
+  const questions = getFinalQuestions();
+  const answers = {};
+  questions.forEach((q, qi) => {
+    const selected = document.querySelector(`input[name="fq_${qi}"]:checked`);
+    if (selected) answers[qi] = Number(selected.value);
+  });
+  state.final.answers = answers;
+  if (persist) saveState();
+}
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>\"]/g, function(c) { return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"})[c]; });
+}
+function csvEscape(value) { const s = String(value ?? ""); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function pct(n,d) { return d ? Math.round((n/d)*100) : 0; }
+function todayString() { return new Date().toLocaleString(); }
+function downloadFile(filename, content, type="text/plain") {
+  const blob = new Blob([content], { type });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+function safeFilePart(s) { return String(s || "MILV_Learner").replace(/[^a-z0-9]+/gi,"_").replace(/^_+|_+$/g,"").slice(0,60) || "MILV_Learner"; }
+
+function encodeAssignmentPayload(payload) {
+  const ids = orderedModuleIds(payload.modules || []);
+  const optionalCodes = ids.filter(id => !REQUIRED_MODULES.includes(id)).map(id => MODULE_CODE_BY_ID[id]).filter(Boolean);
+  return optionalCodes.length ? "MILV-DICT-" + optionalCodes.join("-") : "MILV-DICT-REQ";
+}
+function decodeAssignmentCode(code) {
+  const raw = String(code || "").trim();
+  if (!raw) return null;
+  const cleaned = raw.replace(/\s+/g, "").replace(/^MILV-DICT-?/i, "");
+  if (!cleaned) return null;
+
+  // Current short learner-key format, for example: MILV-DICT-XR-US-CT
+  const upper = cleaned.toUpperCase();
+  if (upper === "REQ" || upper === "REQUIRED") {
+    return { v: 2, type: "dictation", path: "Required modules only", modules: REQUIRED_MODULES.slice() };
+  }
+  const parts = upper.split(/[-,._|+]+/).filter(Boolean);
+  if (parts.length) {
+    let ids = [];
+    let allRecognized = true;
+    parts.forEach(part => {
+      if (["REQ", "REQUIRED", "U", "UNIV", "UNIVERSAL", "112", "ACT112", "ACT"].includes(part)) return;
+      const id = MODULE_ID_BY_CODE[part];
+      if (id) ids.push(id);
+      else allRecognized = false;
+    });
+    if (allRecognized) {
+      REQUIRED_MODULES.forEach(id => { if (!ids.includes(id)) ids.push(id); });
+      ids = orderedModuleIds(ids);
+      const optionalModules = ids.filter(id => !REQUIRED_MODULES.includes(id)).map(id => MODULE_BY_ID[id].short);
+      const pathName = optionalModules.length ? "Selected modules: " + optionalModules.join(", ") : "Required modules only";
+      return { v: 2, type: "dictation", path: pathName, modules: ids };
+    }
+  }
+
+  // Legacy base64 assignment-code support for older test links/codes.
+  try {
+    const base64 = cleaned;
+    const padded = base64 + "=".repeat((4 - base64.length % 4) % 4);
+    const json = decodeURIComponent(escape(atob(padded)));
+    const payload = JSON.parse(json);
+    if (!payload || !Array.isArray(payload.modules)) return null;
+    payload.modules = payload.modules.filter(id => MODULE_BY_ID[id]);
+    return payload;
+  } catch(e) { return null; }
+}
+function buildBaseStateFromAssignment(payload, code) {
+  let assigned = Array.isArray(payload.modules) ? payload.modules.filter(id => MODULE_BY_ID[id]) : DEFAULT_MODULES.slice();
+  REQUIRED_MODULES.forEach(id => { if (MODULE_BY_ID[id] && !assigned.includes(id)) assigned.push(id); });
+  assigned = orderedModuleIds(assigned);
+  const base = {
+    learnerName: payload.name || "",
+    learnerEmail: payload.email || "",
+    assignmentName: payload.path || "Assigned modules",
+    assignedModules: assigned,
+    assignmentCode: code || "",
+    moduleProgress: {},
+    final: { answers: {}, score: null, passed: false, attempts: 0, attested: false, completedAt: null, verificationId: null }
+  };
+  assigned.forEach(id => { base.moduleProgress[id] = { reviewed: false, answers: {}, score: null, passed: false, attempts: 0 }; });
+  return base;
+}
+function applyAssignmentCodeFromInput() {
+  const input = document.getElementById("assignmentCodeInput");
+  const code = input ? input.value.trim() : "";
+  const payload = decodeAssignmentCode(code);
+  if (!payload) { alert("That learner key could not be read. Please copy/paste the full key from your assignment email."); return; }
+  const newState = buildBaseStateFromAssignment(payload, code);
+  const saved = loadSaved(newState);
+  state = saved || newState;
+  if (!state.assignmentCode) state.assignmentCode = code;
+  currentView = "home";
+  currentModuleId = null;
+  saveState();
+  render();
+}
+
+function moduleCompleteCount() { return state.assignedModules.filter(id => state.moduleProgress[id]?.passed).length; }
+function allModulesPassed() { return moduleCompleteCount() === state.assignedModules.length; }
+function competencyComplete() { return allModulesPassed() && state.final.passed && state.final.attested && !!state.final.completedAt; }
+function completionPercent() {
+  const totalSteps = state.assignedModules.length + 1;
+  const done = moduleCompleteCount() + (state.final.passed ? 1 : 0);
+  return pct(done,totalSteps);
+}
+function updateBadges() {
+  document.getElementById("assignmentBadge").textContent = state.assignmentName + " | " + state.assignedModules.length + " modules";
+  document.getElementById("completionBadge").textContent = completionPercent() + "% complete";
+}
+function renderNav() {
+  const nav = document.getElementById("moduleNav");
+  nav.innerHTML = state.assignedModules.map(id => {
+    const m = MODULE_BY_ID[id];
+    const done = state.moduleProgress[id]?.passed;
+    return `<button class="navbtn ${done ? 'done' : ''}" id="nav-module-${id}" data-module="${id}"><span class="icon">${m.icon}</span><span>${escapeHtml(m.short)}</span></button>`;
+  }).join("");
+  document.querySelectorAll("[data-view]").forEach(b => b.onclick = () => showView(b.dataset.view));
+  document.querySelectorAll("[data-module]").forEach(b => b.onclick = () => showModule(b.dataset.module));
+  document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+  const activeId = currentModuleId ? "nav-module-" + currentModuleId : "nav-" + currentView;
+  const active = document.getElementById(activeId);
+  if (active) active.classList.add("active");
+}
+function scrollToCourseTop() {
+  const app = document.getElementById("app");
+  if (app) app.scrollIntoView({ behavior: "smooth", block: "start" });
+  else window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function showView(view) { captureCurrentDraftAnswers(); saveState(); currentView = view; currentModuleId = null; render(); scrollToCourseTop(); }
+function showModule(id) { captureCurrentDraftAnswers(); saveState(); currentView = "module"; currentModuleId = id; render(); scrollToCourseTop(); }
+function render() {
+  updateBadges();
+  renderNav();
+  const app = document.getElementById("app");
+  if (currentView === "home") app.innerHTML = renderHome();
+  else if (currentView === "setup") app.innerHTML = renderSetup();
+  else if (currentView === "module") app.innerHTML = renderModule(currentModuleId);
+  else if (currentView === "final") app.innerHTML = renderFinal();
+  else if (currentView === "results") app.innerHTML = renderResults();
+  bindViewActions();
+}
+
+function renderHome() {
+  const assignedTiles = state.assignedModules.map(id => { const m = MODULE_BY_ID[id]; return `<div class="module-tile"><span class="icon">${m.icon}</span><div><h4>${escapeHtml(m.title)}</h4><p>${escapeHtml(m.audience)}</p></div></div>`; }).join("");
+  return `<div class="card">
+    <div class="kicker">Asynchronous onboarding</div>
+    <h2>How this training works</h2>
+    <p>This tool is intended to train new physicians on the MILV dictation standards that apply to their assigned modalities. It is self-paced. Complete the assigned modules, pass each module quiz, pass the final competency quiz, attest to completion, then open the competency certificate and use the browser print window to save it as a PDF for email submission.</p>
+    <div class="callout"><strong>Need help?</strong> For questions about documentation expectations, coding support, or how to interpret a training item, contact <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</div>
+    <div class="grid">
+      <div class="callout gray"><strong>Assigned path</strong><br>${escapeHtml(state.assignmentName)}</div>
+      <div class="callout gray"><strong>Module quiz pass score</strong><br>${MODULE_PASS}%</div>
+      <div class="callout gray"><strong>Final competency pass score</strong><br>${FINAL_PASS}%</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Assigned module key</h3>
+    <p>If your onboarding/training owner gave you a learner key, paste it here before starting. This loads the correct combination of modality modules for your assigned training path.</p>
+    <div class="callout gray"><strong>Current assignment:</strong> ${escapeHtml(state.assignmentName)}<br><span class="small">${state.assignmentCode ? "Learner key loaded." : "No learner key loaded. If you were assigned specific modalities, paste your key before beginning."}</span></div>
+    <label for="assignmentCodeInput">Learner key</label>
+    <input id="assignmentCodeInput" placeholder="Example: MILV-DICT-XR-US-CT" value="${escapeHtml(state.assignmentCode || "")}">
+    <button id="loadAssignmentCode">Load assigned modules</button>
+  </div>
+  <div class="card">
+    <h3>Learner information</h3>
+    <div class="grid">
+      <div><label for="learnerName">Name</label><input id="learnerName" value="${escapeHtml(state.learnerName)}" placeholder="Full name"></div>
+      <div><label for="learnerEmail">Email</label><input id="learnerEmail" value="${escapeHtml(state.learnerEmail)}" placeholder="name@example.com"></div>
+    </div>
+    <p class="small">Enter your name/email before beginning. This information appears on your competency certificate.</p>
+    <button id="saveLearner">Save learner information</button>
+  </div>
+  <div class="card">
+    <h3>Your assigned modules</h3>
+    <p class="small">Every learner receives Universal Dictation Standards and Pennsylvania Act 112. Additional modules are assigned based on expected reading responsibilities.</p>
+    <div class="grid">${assignedTiles}</div>
+    <hr>
+    <button id="startTraining">Start first module</button>
+  </div>`;
+}
+
+function renderSetup() {
+  const moduleOptions = MODULES.map(m => {
+    const required = REQUIRED_MODULES.includes(m.id);
+    const checked = required ? "checked" : "";
+    const disabled = required ? "disabled" : "";
+    const badge = required ? `<span class="badge">Required for all learners</span>` : `<span class="small">Select if this physician will read this modality/workflow.</span>`;
+    return `<label class="module-select"><input type="checkbox" class="setupModule" value="${m.id}" ${checked} ${disabled}><div><span>${escapeHtml(m.title)}</span><br><small>${escapeHtml(m.audience)}</small><br>${badge}</div></label>`;
+  }).join("");
+  return `<div class="card">
+    <div class="kicker">Training owner setup</div>
+    <h2>Select modules and create a learner key</h2>
+    <p>Select all modality modules that apply to the physician's expected reading responsibilities. Universal Dictation Standards and Pennsylvania Act 112 are included automatically for everyone and cannot be removed.</p>
+    <div class="callout gray"><strong>Note:</strong> The small gear in the top-right opens this owner setup area. Learners normally only need the learner key provided to them.</div>
+  </div>
+  <div class="card">
+    <h3>Module assignment builder</h3>
+    <p class="small">Required modules are already selected. Choose the additional modality modules that apply to this physician.</p>
+    <div class="grid">${moduleOptions}</div>
+    <button id="generateAssignment">Generate learner key</button>
+    <button class="secondary" id="copyAssignment">Copy key</button>
+    <label for="assignmentLink">Learner key to send</label>
+    <input id="assignmentLink" readonly placeholder="Generate a learner key first">
+    <div class="callout gray"><strong>Send to learner:</strong> Open the training webpage, paste this learner key on the Learner instructions page, then complete the assigned modules.</div>
+  </div>
+  <div class="card">
+    <h3>Completion workflow</h3>
+    <div class="lesson"><h4>1. Send the training link</h4><p>Send the learner the approved MILV training webpage link.</p></div>
+    <div class="lesson"><h4>2. Send the learner key</h4><p>Use the gear setup, select all applicable modality modules, generate the learner key, and send the key to the learner. Everyone receives Universal Dictation Standards and Pennsylvania Act 112 automatically.</p></div>
+    <div class="lesson"><h4>3. Collect proof of competency</h4><p>At completion, the learner opens the competency certificate, selects Print or Save as PDF, chooses Save as PDF or Microsoft Print to PDF in the browser print window, saves the PDF using their name, and emails the PDF to LVHN_MILV_Coding_Team@jefferson.edu.</p></div>
+  </div>`;
+}
+
+function renderModule(id) {
+  const m = MODULE_BY_ID[id];
+  if (!m) return `<div class="card"><h2>Module not found</h2></div>`;
+  const p = state.moduleProgress[id] || { reviewed:false, answers:{}, score:null, passed:false, attempts:0 };
+  const lessons = m.lessons.map((l,i) => `<div class="lesson"><h4>${i+1}. ${escapeHtml(l.title)}</h4><p>${escapeHtml(l.body)}</p></div>`).join("");
+  const quiz = renderQuiz(id, m.quiz, p.answers, p.score !== null);
+  return `<div class="card">
+    <div class="kicker">Assigned module</div>
+    <h2>${escapeHtml(m.title)}</h2>
+    <p><strong>Audience:</strong> ${escapeHtml(m.audience)}</p>
+    <div class="progress-wrap"><div class="progress-bar" style="width:${p.passed ? 100 : (p.reviewed ? 45 : 0)}%"></div></div>
+  </div>
+  <div class="card"><h3>Training content</h3>${lessons}
+    <button id="markReviewed" data-id="${id}">${p.reviewed ? "Training content reviewed" : "Mark training content reviewed"}</button>
+  </div>
+  <div class="card">
+    <h3>Correction/addendum practice</h3>
+    <p><strong>Scenario:</strong> ${escapeHtml(m.practice.scenario)}</p>
+    <button class="secondary" id="revealPractice">Reveal model correction/addendum</button>
+    <div id="practiceModel" class="callout gray hidden"><strong>Model correction/addendum:</strong><br>${escapeHtml(m.practice.model)}</div>
+  </div>
+  <div class="card">
+    <h3>Module quiz</h3>
+    <p>Answer the questions after reviewing the training content. Passing score: ${MODULE_PASS}%.</p>
+    ${quiz}
+    <button id="submitModuleQuiz" data-id="${id}">Submit module quiz</button>
+    <button class="secondary" id="resetModuleQuiz" data-id="${id}">Retake module quiz</button>
+    <div id="moduleQuizResult">${renderScoreResult(p.score,p.passed,p.attempts,"module")}</div>
+    ${renderModuleNextStep(id)}
+  </div>`;
+}
+
+function renderQuiz(prefix, questions, answers, locked) {
+  return questions.map((q, qi) => {
+    const chosen = answers?.[qi];
+    const options = q.options.map((opt, oi) => {
+      let cls = "quiz-option";
+      if (locked && oi === q.answer) cls += " correct";
+      if (locked && chosen === oi && oi !== q.answer) cls += " incorrect";
+      return `<label class="${cls}"><input type="radio" name="q_${prefix}_${qi}" value="${oi}" ${chosen===oi ? 'checked' : ''} ${locked ? 'disabled' : ''}> ${escapeHtml(opt)}</label>`;
+    }).join("");
+    const feedback = locked ? `<div class="small"><strong>Why:</strong> ${escapeHtml(q.explanation)}</div>` : "";
+    return `<div class="callout white"><strong>${qi+1}. ${escapeHtml(q.q)}</strong>${options}${feedback}</div>`;
+  }).join("");
+}
+
+function renderScoreResult(score, passed, attempts, label) {
+  if (score === null || score === undefined) return "";
+  return `<div class="result ${passed ? 'pass' : 'fail'}">${passed ? 'Passed' : 'Not yet passed'}: ${score}% ${attempts ? `(attempt ${attempts})` : ''}</div>`;
+}
+
+function nextAssignedModuleId(id) {
+  const idx = state.assignedModules.indexOf(id);
+  if (idx >= 0 && idx < state.assignedModules.length - 1) return state.assignedModules[idx + 1];
+  return null;
+}
+function renderModuleNextStep(id) {
+  const p = state.moduleProgress[id];
+  if (!p || !p.passed) return "";
+  const nextId = nextAssignedModuleId(id);
+  if (nextId) {
+    const next = MODULE_BY_ID[nextId];
+    return `<div class="callout"><strong>Module complete.</strong><br>You have passed this module. Your next assigned module is <strong>${escapeHtml(next.title)}</strong>.<br><br><button id="continueNextStep" data-next-module="${nextId}">Continue to next module</button></div>`;
+  }
+  return `<div class="callout"><strong>All assigned modules complete.</strong><br>You have passed every assigned module. Continue to the final competency quiz.<br><br><button id="continueNextStep" data-next-view="final">Continue to final competency</button></div>`;
+}
+
+function getFinalQuestions() {
+  let selected = [];
+  state.assignedModules.forEach(id => {
+    const m = MODULE_BY_ID[id];
+    m.quiz.slice(0,2).forEach((q, idx) => selected.push({...q, moduleId:id, moduleTitle:m.short, qid:id+"_"+idx}));
+  });
+  if (selected.length < 5) {
+    state.assignedModules.forEach(id => {
+      const m = MODULE_BY_ID[id];
+      m.quiz.slice(2).forEach((q, idx) => selected.push({...q, moduleId:id, moduleTitle:m.short, qid:id+"_"+(idx+2)}));
+    });
+  }
+  return selected.slice(0, Math.max(5, Math.min(18, selected.length)));
+}
+
+function renderFinal() {
+  if (!allModulesPassed()) {
+    return `<div class="card"><h2>Final competency quiz locked</h2><p>Complete and pass all assigned module quizzes before starting the final competency quiz.</p>${renderModuleStatusTable()}</div>`;
+  }
+  const questions = getFinalQuestions();
+  const quiz = renderFinalQuiz(questions, state.final.answers, state.final.score !== null);
+  return `<div class="card"><div class="kicker">Final competency</div><h2>Final competency quiz</h2><p>This quiz covers only the modules assigned to you. Passing score: ${FINAL_PASS}%.</p></div>
+  <div class="card">${quiz}
+    <button id="submitFinalQuiz">Submit final competency quiz</button>
+    <button class="secondary" id="resetFinalQuiz">Retake final competency quiz</button>
+    <div>${renderScoreResult(state.final.score,state.final.passed,state.final.attempts,"final")}</div>
+    ${state.final.passed ? `<div class="callout"><strong>Final competency passed.</strong><br>Go to Results / certificate to complete your attestation and open the certificate.<br><br><button id="continueNextStep" data-next-view="results">Continue to Results / certificate</button></div>` : ""}
+  </div>`;
+}
+function renderFinalQuiz(questions, answers, locked) {
+  return questions.map((q, qi) => {
+    const chosen = answers?.[qi];
+    const options = q.options.map((opt, oi) => {
+      let cls = "quiz-option";
+      if (locked && oi === q.answer) cls += " correct";
+      if (locked && chosen === oi && oi !== q.answer) cls += " incorrect";
+      return `<label class="${cls}"><input type="radio" name="fq_${qi}" value="${oi}" ${chosen===oi ? 'checked' : ''} ${locked ? 'disabled' : ''}> ${escapeHtml(opt)}</label>`;
+    }).join("");
+    const feedback = locked ? `<div class="small"><strong>${escapeHtml(q.moduleTitle)}:</strong> ${escapeHtml(q.explanation)}</div>` : `<div class="small">Module: ${escapeHtml(q.moduleTitle)}</div>`;
+    return `<div class="callout white"><strong>${qi+1}. ${escapeHtml(q.q)}</strong>${options}${feedback}</div>`;
+  }).join("");
+}
+
+function renderResults() {
+  const canFinalize = allModulesPassed() && state.final.passed;
+  const complete = competencyComplete();
+  const status = complete ? "Competency complete" : canFinalize ? "Ready for learner attestation" : "In progress";
+  const downloadDisabled = complete ? "" : "disabled";
+  const emailSubject = encodeURIComponent("MILV Dictation Standards Competency Certificate - " + (state.learnerName || "Learner"));
+  const emailBody = encodeURIComponent("Hello MILV Coding Team,\n\nAttached is my MILV Dictation Standards competency certificate PDF.\n\nName: " + (state.learnerName || "") + "\nEmail: " + (state.learnerEmail || "") + "\nAssignment: " + state.assignmentName + "\nVerification ID: " + (state.final.verificationId || "") + "\n\nThank you.");
+  return `<div class="card"><div class="kicker">Results and certificate turn-in</div><h2>${status}</h2>
+    <p>Learner: <strong>${escapeHtml(state.learnerName || "Not entered")}</strong> | Email: <strong>${escapeHtml(state.learnerEmail || "Not entered")}</strong></p>
+    <p>Assignment: <strong>${escapeHtml(state.assignmentName)}</strong></p>
+    <div class="progress-wrap"><div class="progress-bar" style="width:${completionPercent()}%"></div></div>
+  </div>
+  <div class="card"><h3>Module status</h3>${renderModuleStatusTable()}</div>
+  <div class="card"><h3>Final competency status</h3>
+    <p>Final score: <strong>${state.final.score === null ? "Not submitted" : state.final.score + "%"}</strong></p>
+    <p>Attempts: <strong>${state.final.attempts}</strong></p>
+    <p>Status: <strong>${state.final.passed ? "Passed" : "Not yet passed"}</strong></p>
+    ${canFinalize ? renderAttestation() : `<div class="callout gray">Complete all assigned module quizzes and pass the final competency quiz to unlock the certificate.</div>`}
+  </div>
+  <div class="card"><h3>Certificate turn-in instructions</h3>
+    <p>After finalizing, open the certificate, save it as a PDF, and email the PDF to <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>. Do not include PHI in the email.</p>
+    <div class="callout gray"><strong>How to print/save the certificate to PDF:</strong><br>1. Select <strong>Open certificate / save as PDF</strong> below. A certificate window or tab will open.<br>2. In that certificate window, choose <strong>Print / Save as PDF</strong>. If the browser print window opens automatically, continue to step 3.<br>3. In the print window, set <strong>Destination</strong> or <strong>Printer</strong> to <strong>Save as PDF</strong> or <strong>Microsoft Print to PDF</strong>.<br>4. Select <strong>Save</strong> or <strong>Print</strong>, then save the file using your name, for example: <strong>Last_First_MILV_Dictation_Certificate.pdf</strong>.<br>5. Attach the saved PDF to an email and send it to <strong>${CONTACT_EMAIL}</strong>.</div>
+    <button id="printCertificate" ${downloadDisabled}>Open certificate / save as PDF</button>
+    <a class="btn mailto-btn" id="emailTeam" href="mailto:${CONTACT_EMAIL}?subject=${emailSubject}&body=${emailBody}" ${complete ? "" : "style='display:none'"}>Open email to MILV Coding Team</a>
+    <div class="callout"><strong>After submission:</strong> The MILV Coding Team will confirm receipt and retain the completion documentation in the appropriate employee training record.</div>
+    <div class="callout"><strong>Questions or submission problems?</strong> Contact <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</div>
+  </div>
+  ${complete ? `<div class="card"><h3>Certificate preview</h3><div class="certificate-preview"><div class="kicker">Medical Imaging of Lehigh Valley, P.C.</div><h2>Competency Complete</h2><p>${escapeHtml(state.learnerName)}</p><p>${escapeHtml(state.assignmentName)}</p><p>Final score: ${state.final.score}% | Completed: ${escapeHtml(state.final.completedAt)}</p><p>Verification ID: ${escapeHtml(state.final.verificationId)}</p></div></div>` : ""}`;
+}
+function renderModuleStatusTable() {
+  const rows = state.assignedModules.map(id => {
+    const m = MODULE_BY_ID[id]; const p = state.moduleProgress[id];
+    return `<tr><td>${escapeHtml(m.title)}</td><td>${p.reviewed ? "Reviewed" : "Not reviewed"}</td><td>${p.score === null ? "Not submitted" : p.score + "%"}</td><td>${p.passed ? "Passed" : "Not yet passed"}</td><td>${p.attempts}</td></tr>`;
+  }).join("");
+  return `<table class="table"><thead><tr><th>Module</th><th>Training content</th><th>Quiz score</th><th>Status</th><th>Attempts</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function renderAttestation() {
+  const checked = state.final.attested ? "checked" : "";
+  const finalized = state.final.completedAt ? `<div class="result pass">Finalized on ${escapeHtml(state.final.completedAt)}<br>Verification ID: ${escapeHtml(state.final.verificationId)}</div>` : "";
+  return `<div class="callout white"><label style="display:flex;gap:10px;align-items:flex-start"><input style="width:auto;margin-top:4px" type="checkbox" id="attest" ${checked}> <span>I attest that I personally completed the assigned asynchronous MILV dictation standards training and final competency quiz.</span></label><button id="finalizeCompetency">Finalize competency</button>${finalized}</div>`;
+}
+
+function bindViewActions() {
+  const saveLearner = document.getElementById("saveLearner");
+  if (saveLearner) saveLearner.onclick = () => {
+    state.learnerName = document.getElementById("learnerName").value.trim();
+    state.learnerEmail = document.getElementById("learnerEmail").value.trim();
+    saveState(); render();
+  };
+  const startTraining = document.getElementById("startTraining");
+  if (startTraining) startTraining.onclick = () => showModule(state.assignedModules[0]);
+  const loadCode = document.getElementById("loadAssignmentCode");
+  if (loadCode) loadCode.onclick = applyAssignmentCodeFromInput;
+  const gen = document.getElementById("generateAssignment");
+  if (gen) gen.onclick = generateAssignmentLink;
+  const copy = document.getElementById("copyAssignment");
+  if (copy) copy.onclick = async () => {
+    const txt = document.getElementById("assignmentLink").value;
+    if (!txt) return;
+    try { await navigator.clipboard.writeText(txt); copy.textContent = "Copied"; } catch(e) { document.getElementById("assignmentLink").select(); }
+  };
+  const markReviewed = document.getElementById("markReviewed");
+  if (markReviewed) markReviewed.onclick = () => {
+    const id = markReviewed.dataset.id;
+    state.moduleProgress[id].reviewed = true;
+    saveState(); render();
+  };
+  const reveal = document.getElementById("revealPractice");
+  if (reveal) reveal.onclick = () => document.getElementById("practiceModel").classList.toggle("hidden");
+  document.querySelectorAll('input[type="radio"][name^="q_"]').forEach(input => input.onchange = () => { if (currentModuleId) saveModuleDraftAnswers(currentModuleId); });
+  document.querySelectorAll('input[type="radio"][name^="fq_"]').forEach(input => input.onchange = () => saveFinalDraftAnswers());
+  const submitMod = document.getElementById("submitModuleQuiz");
+  if (submitMod) submitMod.onclick = () => submitModuleQuiz(submitMod.dataset.id);
+  const resetMod = document.getElementById("resetModuleQuiz");
+  if (resetMod) resetMod.onclick = () => resetModuleQuiz(resetMod.dataset.id);
+  const submitFinal = document.getElementById("submitFinalQuiz");
+  if (submitFinal) submitFinal.onclick = submitFinalQuiz;
+  const resetFinal = document.getElementById("resetFinalQuiz");
+  if (resetFinal) resetFinal.onclick = resetFinalQuiz;
+  const attest = document.getElementById("attest");
+  if (attest) attest.onchange = () => { state.final.attested = attest.checked; saveState(); };
+  const finalize = document.getElementById("finalizeCompetency");
+  if (finalize) finalize.onclick = finalizeCompetency;
+  const pCert = document.getElementById("printCertificate");
+  if (pCert) pCert.onclick = () => {
+    const w = window.open("", "_blank");
+    w.document.write(certificateHTML());
+    w.document.close();
+    setTimeout(() => { try { w.focus(); w.print(); } catch(e) {} }, 350);
+  };
+  const nextStep = document.getElementById("continueNextStep");
+  if (nextStep) nextStep.onclick = () => {
+    if (nextStep.dataset.nextModule) showModule(nextStep.dataset.nextModule);
+    else if (nextStep.dataset.nextView) showView(nextStep.dataset.nextView);
+  };
+}
+function generateAssignmentLink() {
+  let ids = Array.from(document.querySelectorAll(".setupModule")).filter(cb => cb.checked || REQUIRED_MODULES.includes(cb.value)).map(cb => cb.value);
+  REQUIRED_MODULES.forEach(id => { if (MODULE_BY_ID[id] && !ids.includes(id)) ids.push(id); });
+  ids = orderedModuleIds(ids);
+  const optionalModules = ids.filter(id => !REQUIRED_MODULES.includes(id)).map(id => MODULE_BY_ID[id].short);
+  const pathName = optionalModules.length ? "Selected modules: " + optionalModules.join(", ") : "Required modules only";
+  const payload = { v: 2, type: "dictation", path: pathName, modules: ids };
+  const code = encodeAssignmentPayload(payload);
+  document.getElementById("assignmentLink").value = code;
+}
+
+function submitModuleQuiz(id) {
+  const m = MODULE_BY_ID[id];
+  const p = state.moduleProgress[id];
+  let correct = 0;
+  let answers = {};
+  m.quiz.forEach((q, qi) => {
+    const selected = document.querySelector(`input[name="q_${id}_${qi}"]:checked`);
+    if (selected) answers[qi] = Number(selected.value);
+    if (selected && Number(selected.value) === q.answer) correct++;
+  });
+  if (Object.keys(answers).length < m.quiz.length) { alert("Please answer every module quiz question before submitting."); return; }
+  p.answers = answers;
+  p.score = pct(correct, m.quiz.length);
+  p.passed = p.score >= MODULE_PASS;
+  p.attempts += 1;
+  if (p.passed) p.reviewed = true;
+  saveState(); render();
+}
+function resetModuleQuiz(id) {
+  state.moduleProgress[id].answers = {};
+  state.moduleProgress[id].score = null;
+  state.moduleProgress[id].passed = false;
+  saveState(); render();
+}
+function submitFinalQuiz() {
+  const questions = getFinalQuestions();
+  let correct = 0;
+  let answers = {};
+  questions.forEach((q, qi) => {
+    const selected = document.querySelector(`input[name="fq_${qi}"]:checked`);
+    if (selected) answers[qi] = Number(selected.value);
+    if (selected && Number(selected.value) === q.answer) correct++;
+  });
+  if (Object.keys(answers).length < questions.length) { alert("Please answer every final competency question before submitting."); return; }
+  state.final.answers = answers;
+  state.final.score = pct(correct, questions.length);
+  state.final.passed = state.final.score >= FINAL_PASS;
+  state.final.attempts += 1;
+  if (!state.final.passed) { state.final.attested = false; state.final.completedAt = null; state.final.verificationId = null; }
+  saveState(); render();
+}
+function resetFinalQuiz() {
+  state.final.answers = {}; state.final.score = null; state.final.passed = false; state.final.attested = false; state.final.completedAt = null; state.final.verificationId = null;
+  saveState(); render();
+}
+function finalizeCompetency() {
+  const attest = document.getElementById("attest");
+  state.final.attested = !!attest?.checked;
+  if (!state.final.attested) { alert("Please complete the learner attestation before finalizing."); return; }
+  if (!state.learnerName || !state.learnerEmail) { alert("Please enter and save learner name and email on the Learner instructions page before finalizing."); return; }
+  state.final.completedAt = state.final.completedAt || todayString();
+  state.final.verificationId = state.final.verificationId || generateVerificationId();
+  saveState(); render();
+}
+function generateVerificationId() {
+  const seed = [state.learnerEmail, state.assignedModules.join("-"), new Date().toISOString(), Math.random().toString(36).slice(2)].join("|");
+  let hash = 0;
+  for (let i=0; i<seed.length; i++) hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0;
+  return "MILV-" + Math.abs(hash).toString(36).toUpperCase().padStart(7,"0");
+}
+
+function auditObject() {
+  const finalQuestions = getFinalQuestions().map((q, i) => ({ moduleId:q.moduleId, moduleTitle:q.moduleTitle, question:q.q, selectedAnswer:q.options[state.final.answers[i]], correctAnswer:q.options[q.answer], correct:state.final.answers[i]===q.answer }));
+  return {
+    trainingTitle:"MILV Dictation Standards Assigned Asynchronous Training",
+    learnerName:state.learnerName,
+    learnerEmail:state.learnerEmail,
+    assignmentName:state.assignmentName,
+    assignedModules:state.assignedModules.map(id => MODULE_BY_ID[id].title),
+    moduleResults:state.assignedModules.map(id => ({ id, title:MODULE_BY_ID[id].title, reviewed:state.moduleProgress[id].reviewed, score:state.moduleProgress[id].score, passed:state.moduleProgress[id].passed, attempts:state.moduleProgress[id].attempts })),
+    finalScore:state.final.score,
+    finalPassed:state.final.passed,
+    finalAttempts:state.final.attempts,
+    attested:state.final.attested,
+    completedAt:state.final.completedAt,
+    verificationId:state.final.verificationId,
+    finalQuestions
+  };
+}
+function csvResult() {
+  const headers = ["Learner Name","Learner Email","Assignment","Assigned Modules","Module Scores","Final Score","Final Passed","Attested","Completed At","Verification ID","Contact"];
+  const moduleScores = state.assignedModules.map(id => MODULE_BY_ID[id].short + ":" + (state.moduleProgress[id].score ?? "NA") + "%").join("; ");
+  const row = [state.learnerName,state.learnerEmail,state.assignmentName,state.assignedModules.map(id=>MODULE_BY_ID[id].title).join("; "),moduleScores,state.final.score + "%",state.final.passed ? "Yes" : "No",state.final.attested ? "Yes" : "No",state.final.completedAt,state.final.verificationId,CONTACT_EMAIL];
+  return headers.map(csvEscape).join(",") + "\n" + row.map(csvEscape).join(",") + "\n";
+}
+function certificateFileName() { return safeFilePart(state.learnerName) + "_MILV_Dictation_Competency_Certificate.html"; }
+function csvFileName() { return safeFilePart(state.learnerName) + "_MILV_Dictation_Competency_Result.csv"; }
+function auditFileName() { return safeFilePart(state.learnerName) + "_MILV_Dictation_Competency_Audit.json"; }
+function certificateHTML() {
+  const moduleRows = state.assignedModules.map(id => `<tr><td>${escapeHtml(MODULE_BY_ID[id].title)}</td><td>${state.moduleProgress[id].score}%</td><td>${state.moduleProgress[id].attempts}</td></tr>`).join("");
+  return `<!doctype html><html><head><meta charset="utf-8"><title>MILV Competency Certificate</title><style>body{font-family:Arial,Helvetica,sans-serif;color:#1F2933;margin:0;background:#F5F7FA}.page{max-width:900px;margin:32px auto;background:white;border:8px solid #005B8E;padding:42px}.top{text-align:center;border-bottom:2px solid #CBD2D9;padding-bottom:20px}h1{color:#003F63;font-size:34px;margin:8px 0}h2{color:#005B8E}.meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}.box{border:1px solid #CBD2D9;background:#F5F7FA;border-radius:10px;padding:12px}table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #E4E7EB;text-align:left;padding:9px}th{background:#E8F2F8;color:#003F63}.footer{margin-top:24px;font-size:13px;color:#52606D}.no-print{background:#E8F2F8;border:1px solid #BED6E6;border-radius:10px;padding:12px;margin-bottom:16px}@media print{body{background:white}.page{margin:0;border:6px solid #005B8E}.no-print{display:none}}</style></head><body><div class="page"><div class="no-print"><strong>Save this certificate as a PDF:</strong><br>1. Select <strong>Print / Save as PDF</strong> below, or use <strong>Ctrl+P</strong>.<br>2. In the print window, choose <strong>Save as PDF</strong> or <strong>Microsoft Print to PDF</strong> as the destination/printer.<br>3. Save the file using your name, then email the PDF to <strong>${CONTACT_EMAIL}</strong>. Do not include PHI.<br><br><button onclick="window.print()" style="background:#005B8E;color:white;border:0;border-radius:8px;padding:10px 12px;font-weight:800">Print / Save as PDF</button></div><div class="top"><div style="font-weight:900;color:#005B8E;letter-spacing:.1em">MEDICAL IMAGING OF LEHIGH VALLEY, P.C.</div><h1>Dictation Standards Competency Certificate</h1><p>This record confirms completion of assigned asynchronous training and competency quiz.</p></div><div class="meta"><div class="box"><strong>Learner</strong><br>${escapeHtml(state.learnerName)}<br>${escapeHtml(state.learnerEmail)}</div><div class="box"><strong>Assignment</strong><br>${escapeHtml(state.assignmentName)}<br>Completed: ${escapeHtml(state.final.completedAt)}</div><div class="box"><strong>Final score</strong><br>${state.final.score}%</div><div class="box"><strong>Verification ID</strong><br>${escapeHtml(state.final.verificationId)}</div></div><h2>Assigned module results</h2><table><thead><tr><th>Module</th><th>Score</th><th>Attempts</th></tr></thead><tbody>${moduleRows}</tbody></table><div class="footer"><p><strong>Learner attestation:</strong> The learner attested that they personally completed the assigned training and final competency quiz.</p><p><strong>Turn-in:</strong> Save this certificate as a PDF and email it to ${CONTACT_EMAIL}. The MILV Coding Team will confirm receipt and retain the completion documentation in the appropriate employee training record.</p><p>Questions: ${CONTACT_EMAIL}</p></div></div></body></html>`;
+}
+
+
+render();
+
+
+</script>
+</body>
+</html>
